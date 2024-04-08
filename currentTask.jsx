@@ -36,28 +36,6 @@ export const initialState = {
   task: "",
 };
 
-const filterContent = (output, error, previousState) => {
-  // Check for errors
-  if (error) {
-    const err_output = { ...previousState, error: error };
-    console.error(err_output);
-    return err_output;
-  }
-
-  // Split the input string into lines
-  const lines = output.split('\n');
-
-  // Find the row that starts with '- [>]'
-  const currentTask = lines.find(line => line.trim().startsWith('- [>]'));
-  const result = currentTask.replace('- [>]', '').trim();
-
-  // Print the result
-  console.log(result);
-
-  console.log('state', previousState)
-  return { ...previousState, task: result }
-};
-
 export const updateState = ({ output, error }, previousState) => {
   // Check for errors
   if (error) {
@@ -71,12 +49,8 @@ export const updateState = ({ output, error }, previousState) => {
 
   // Find the row that starts with '- [>]'
   const currentTask = lines.find(line => line.trim().startsWith('- [>]'));
-  const result = currentTask.replace('- [>]', '').trim();
+  const result = currentTask?.replace('- [>]', '').trim();
 
-  // Print the result
-  console.log(result);
-
-  console.log('state', previousState)
   return { ...previousState, task: result }
 }
 
