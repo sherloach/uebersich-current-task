@@ -2,7 +2,7 @@
 
 on readFile()
     -- Set the file path of the Markdown file
-    set filePath to "/Users/hayden/Documents/Obsidian/daily.md"
+    set filePath to "/Users/hayden/Documents/Obsidian/notes/daily/todo.md"
 
     -- Read the contents of the file
     set fileContents to read POSIX file filePath as «class utf8»
