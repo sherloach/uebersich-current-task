@@ -9,7 +9,7 @@ const containerClassName = css({
   background: 'linear-gradient(135deg, rgba(25, 25, 25, 0.85) 0%, rgba(10, 10, 10, 0.95) 100%)',
   borderRadius: '8px',
   padding: '12px 16px',
-  maxWidth: '400px',
+  // maxWidth: '400px',
   maxHeight: '70px',
   boxSizing: 'border-box',
   overflow: 'hidden',
@@ -95,43 +95,68 @@ export const updateState = ({ output, error }, previousState) => {
   let taskName = "";
   let tags = [];
 
+
   if (output) {
+    // Split the string by "-" delimiter
+    const parts = output.split('-');
+
+    // Extract the parts
+    project = parts[0].trim();
+    taskName = parts[1].trim();
+
+    const tagsString = parts[2].trim();
+    const allTagWords = tagsString.split(' ').filter(word => word !== '');
+
+    // Process the tags, removing "In Progress"
+    let i = 0;
+    while (i < allTagWords.length) {
+      // Check for "In Progress" as a special case
+      if (allTagWords[i] === 'In' && i + 1 < allTagWords.length && allTagWords[i + 1] === 'Progress') {
+        i += 2; // Skip "In Progress"
+      } else {
+        // Add other tags to the array
+        tags.push(allTagWords[i]);
+        i++;
+      }
+    }
+
     // For example: "Daily habbits-test- In Progress Focused Home"
 
     // First, let's split by the first dash to get the project name
-    const firstDashIndex = output.indexOf('-');
-    if (firstDashIndex !== -1) {
-      project = output.substring(0, firstDashIndex).trim();
-
-      // Now let's extract the known tags
-      const knownTags = ["Focused", "Home"];
-      const remainingText = output.substring(firstDashIndex + 1);
-
-      // Create a temporary string to work with
-      let tempText = remainingText;
-      let extractedTags = [];
-
-      // Extract each known tag
-      knownTags.forEach(tag => {
-        if (tempText.includes(tag)) {
-          extractedTags.push(tag);
-          // Remove the tag from the text
-          tempText = tempText.replace(new RegExp(tag, 'g'), '');
-        }
-      });
-
-      // Also remove "In Progress" explicitly
-      tempText = tempText.replace(/In Progress/g, '');
-
-      // Clean up the task name (remove extra dashes and spaces)
-      taskName = tempText.replace(/-/g, '').replace(/\s+/g, ' ').trim();
-
-      // Set the tags without duplicates
-      tags = [...new Set(extractedTags)];
-    } else {
-      // If there's no dash, the whole string is the task name
-      taskName = output;
-    }
+    // const firstDashIndex = output.indexOf('-');
+    // if (firstDashIndex !== -1) {
+    //   project = output.substring(0, firstDashIndex).trim();
+    //
+    //   // Now let's extract the known tags
+    //   const knownTags = ["Focused", "Home"];
+    //   const remainingText = output.substring(firstDashIndex + 1);
+    //   console.log('First dash index:', firstDashIndex);
+    //
+    //   // Create a temporary string to work with
+    //   let tempText = remainingText;
+    //   let extractedTags = [];
+    //
+    //   // Extract each known tag
+    //   knownTags.forEach(tag => {
+    //     if (tempText.includes(tag)) {
+    //       extractedTags.push(tag);
+    //       // Remove the tag from the text
+    //       tempText = tempText.replace(new RegExp(tag, 'g'), '');
+    //     }
+    //   });
+    //
+    //   // Also remove "In Progress" explicitly
+    //   tempText = tempText.replace(/In Progress/g, '');
+    //
+    //   // Clean up the task name (remove extra dashes and spaces)
+    //   taskName = tempText.replace(/-/g, '').replace(/\s+/g, ' ').trim();
+    //
+    //   // Set the tags without duplicates
+    //   tags = [...new Set(extractedTags)];
+    // } else {
+    //   // If there's no dash, the whole string is the task name
+    //   taskName = output;
+    // }
   }
 
   console.log('Parsed data:', { project, taskName, tags });
