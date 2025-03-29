@@ -104,8 +104,10 @@ export const updateState = ({ output, error }, previousState) => {
     project = parts[0].trim();
     taskName = parts[1].trim();
 
-    const tagsString = parts[2].trim();
-    const allTagWords = tagsString.split(' ').filter(word => word !== '');
+    if (parts.length < 3) return { project, taskName, tags };
+
+    const tagsString = parts[2]?.trim();
+    const allTagWords = tagsString?.split(' ').filter(word => word !== '');
 
     // Process the tags, removing "In Progress"
     let i = 0;
